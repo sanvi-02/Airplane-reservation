@@ -5,7 +5,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  
 }
 
 model Flight {
@@ -26,4 +25,15 @@ model Seat {
   isBooked  Boolean @default(false)
   flightId  String
   flight    Flight  @relation(fields: [flightId], references: [id])
+  booking    Booking?
+}
+
+model Booking {
+  id             String   @id @default(uuid())
+  referenceCode  String   @unique
+  passengerName  String
+  passengerEmail String
+  seatId         String   @unique
+  seat           Seat     @relation(fields: [seatId], references: [id])
+  createdAt      DateTime @default(now())
 }
