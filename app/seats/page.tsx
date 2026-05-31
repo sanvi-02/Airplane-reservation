@@ -27,7 +27,7 @@ export default function SeatsPage() {
 
   const [flight, setFlight] = useState<Flight | null>(null);
   const [seats, setSeats] = useState<Seat[]>([]);
-  const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
+  const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -51,7 +51,11 @@ export default function SeatsPage() {
 
   const handleSeatClick = (seat: Seat) => {
     if (seat.isBooked) return;
-    setSelectedSeat(seat.id === selectedSeat?.id ? null : seat);
+    setSelectedSeats((prev) =>
+      prev.find((s) => s.id === seat.id)
+        ? prev.filter((s) => s.id !== seat.id)
+        : [...prev, seat]
+    );
   };
 
   const formatTime = (dt: string) =>
@@ -73,7 +77,7 @@ export default function SeatsPage() {
       <main className="min-h-screen bg-slate-950 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3 text-slate-400">
           <div className="w-8 h-8 border-2 border-slate-600 border-t-blue-400 rounded-full animate-spin" />
-          <p>Seats load ho rahi hain...</p>
+          <p>Loading...</p>
         </div>
       </main>
     );
@@ -88,7 +92,7 @@ export default function SeatsPage() {
           <button
             onClick={() => router.back()}
             className="mt-4 text-blue-400 hover:underline text-sm">
-            ← Wapas jaao
+            ← Go Back
           </button>
         </div>
       </main>
@@ -179,7 +183,7 @@ export default function SeatsPage() {
                 {rowIdx + 1}
               </div>
               {seats.slice(rowIdx * 6, rowIdx * 6 + 6).map((seat) => {
-                const isSelected = selectedSeat?.id === seat.id;
+                const isSelected = selectedSeats.some((s) => s.id === seat.id);
                 return (
                   <button
                     key={seat.id}
@@ -203,21 +207,30 @@ export default function SeatsPage() {
 
         {/* Book Now */}
         <div className="bg-slate-900 border border-slate-700 rounded-2xl p-5">
-          {selectedSeat ? (
+          {selectedSeats.length > 0 ? (
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-400 text-sm">Selected seat</p>
+                <p className="text-slate-400 text-sm">
+                  {selectedSeats.length} seat
+                  {selectedSeats.length > 1 ? "s" : ""} selected
+                </p>
                 <p className="text-white font-bold text-xl">
-                  {selectedSeat.seatNumber}
+                  {selectedSeats.map((s) => s.seatNumber).join(", ")}
                 </p>
                 <p className="text-slate-400 text-sm mt-0.5">
-                  ₹{flight.price.toLocaleString("en-IN")}
+                  ₹
+                  {(flight.price * selectedSeats.length).toLocaleString(
+                    "en-IN"
+                  )}{" "}
+                  total
                 </p>
               </div>
               <button
                 onClick={() =>
                   router.push(
-                    `/booking?flightId=${flightId}&seatId=${selectedSeat.id}`
+                    `/booking?flightId=${flightId}&seatIds=${selectedSeats
+                      .map((s) => s.id)
+                      .join(",")}`
                   )
                 }
                 className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-3 rounded-xl transition-colors">
@@ -226,7 +239,7 @@ export default function SeatsPage() {
             </div>
           ) : (
             <p className="text-slate-500 text-sm text-center">
-              Upar se ek seat select karo
+             Select seats from above
             </p>
           )}
         </div>

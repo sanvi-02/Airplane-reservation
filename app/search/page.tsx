@@ -64,7 +64,7 @@ export default function SearchPage() {
             Search Your Flights
           </h1>
           <p className="text-slate-400 mb-8">
-            Destination choose karo, date select karo, aur best seats grab karo.
+            Select destination and seats.
           </p>
           <SearchForm onSearch={handleSearch} loading={loading} />
         </div>
@@ -89,7 +89,7 @@ export default function SearchPage() {
               No flights available
             </p>
             <p className="text-sm mt-1">
-              Date ya destination change karke dobara try karo
+             Try again
             </p>
           </div>
         )}
