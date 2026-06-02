@@ -228,9 +228,7 @@ export default function SeatsPage() {
               <button
                 onClick={() =>
                   router.push(
-                    `/booking?flightId=${flightId}&seatIds=${selectedSeats
-                      .map((s) => s.id)
-                      .join(",")}`
+                    `/book?flightId=${flightId}&seatId=${selectedSeats[0].id}`
                   )
                 }
                 className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-3 rounded-xl transition-colors">
@@ -239,7 +237,7 @@ export default function SeatsPage() {
             </div>
           ) : (
             <p className="text-slate-500 text-sm text-center">
-             Select seats from above
+              Select seats from above
             </p>
           )}
         </div>

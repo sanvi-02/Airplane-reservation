@@ -11,43 +11,43 @@ export default async function BookPage({ searchParams }: Props) {
 
   if (!flightId || !seatId) return notFound();
 
-  // fetch seat + flight from DB directly (server component)
   const seat = await prisma.seat.findUnique({
     where: { id: seatId },
     include: { flight: true },
   });
 
   if (!seat || seat.flightId !== flightId) return notFound();
+
   if (seat.isBooked) {
     return (
-      <div className="max-w-md mx-auto mt-20 text-center">
-        <p className="text-red-500 text-lg font-medium">
-          This seat is already booked.
-        </p>
-        <a href="/" className="text-blue-600 underline text-sm mt-2 block">
-          Go back to search
-        </a>
-      </div>
+      <main className="min-h-screen bg-slate-950 flex items-center justify-center px-4">
+        <div className="bg-slate-900 border border-slate-700 rounded-2xl p-8 text-center max-w-sm w-full">
+          <p className="text-4xl mb-4">😔</p>
+          <p className="text-white font-semibold text-lg mb-2">
+            Seat Already Booked
+          </p>
+          {/* <p className="text-slate-400 text-sm mb-6">
+            Yeh seat kisi aur ne le li. Doosri seat chunno.
+          </p> */}
+          <a
+            href="/search"
+            className="block w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl transition-colors text-sm">
+            Back to Search
+          </a>
+        </div>
+      </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 py-10 px-4">
-      <h1 className="text-2xl font-bold text-center text-gray-800 mb-2">
-        Complete Your Booking
-      </h1>
-      <p className="text-center text-sm text-gray-500 mb-6">
-        Review your seat and enter passenger details
-      </p>
-      <BookingForm
-        flightId={flightId}
-        seatId={seatId}
-        seatNumber={seat.seatNumber}
-        flightNumber={seat.flight.flightNumber}
-        origin={seat.flight.origin}
-        destination={seat.flight.destination}
-        price={seat.flight.price}
-      />
-    </main>
+    <BookingForm
+      flightId={flightId}
+      seatId={seatId}
+      seatNumber={seat.seatNumber}
+      flightNumber={seat.flight.flightNumber}
+      origin={seat.flight.origin}
+      destination={seat.flight.destination}
+      price={seat.flight.price}
+    />
   );
 }

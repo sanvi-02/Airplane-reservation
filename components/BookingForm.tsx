@@ -55,9 +55,10 @@ export default function BookingForm({
         return;
       }
 
-      // redirect to confirm page with booking details in URL
       router.push(
-        `/confirm?ref=${data.referenceCode}&name=${encodeURIComponent(name)}&flight=${flightNumber}&seat=${seatNumber}&from=${origin}&to=${destination}&price=${price}`,
+        `/confirm?ref=${data.referenceCode}&name=${encodeURIComponent(
+          name
+        )}&flight=${flightNumber}&seat=${seatNumber}&from=${origin}&to=${destination}&price=${price}`
       );
     } catch {
       setError("Something went wrong. Try again.");
@@ -67,59 +68,97 @@ export default function BookingForm({
   }
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-2xl shadow-md">
-      {/* Flight summary */}
-      <div className="mb-6 p-4 bg-blue-50 rounded-xl">
-        <p className="text-sm text-gray-500">Flight</p>
-        <p className="font-semibold text-lg">
-          {flightNumber} · {origin} → {destination}
-        </p>
-        <p className="text-sm text-gray-500 mt-1">
-          Seat <span className="font-medium text-gray-800">{seatNumber}</span>
-        </p>
-        <p className="text-sm text-gray-500">
-          Price <span className="font-medium text-gray-800">₹{price}</span>
-        </p>
-      </div>
+    <main className="min-h-screen bg-slate-950">
+      <header className="border-b border-slate-800 px-6 py-4">
+        <div className="max-w-2xl mx-auto flex items-center gap-3">
+          <span className="text-xl font-bold text-white">✈ SkyBook</span>
+        </div>
+      </header>
 
-      {/* Form */}
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Full Name
-          </label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Enter your name"
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+      <div className="max-w-md mx-auto px-6 py-10">
+        <h1 className="text-2xl font-bold text-white mb-2">Complete Booking</h1>
+        <p className="text-slate-400 text-sm mb-8">
+          Review your details and confirm.
+        </p>
+
+        {/* Flight Summary */}
+        <div className="bg-slate-900 border border-slate-700 rounded-2xl p-5 mb-6">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-xs font-mono bg-slate-800 text-slate-400 px-2 py-1 rounded">
+              {flightNumber}
+            </span>
+          </div>
+          <div className="flex items-center gap-4 mb-4">
+            <div>
+              <p className="text-xl font-bold text-white">{origin}</p>
+              <p className="text-slate-400 text-xs">Origin</p>
+            </div>
+            <div className="flex-1 flex items-center gap-1">
+              <div className="flex-1 h-px bg-slate-700" />
+              <span className="text-slate-500 text-xs">✈</span>
+              <div className="flex-1 h-px bg-slate-700" />
+            </div>
+            <div className="text-right">
+              <p className="text-xl font-bold text-white">{destination}</p>
+              <p className="text-slate-400 text-xs">Destination</p>
+            </div>
+          </div>
+          <div className="flex justify-between border-t border-slate-700 pt-3">
+            <div>
+              <p className="text-slate-400 text-xs">Seat</p>
+              <p className="text-white font-semibold">{seatNumber}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-slate-400 text-xs">Price</p>
+              <p className="text-white font-semibold">
+                ₹{price.toLocaleString("en-IN")}
+              </p>
+            </div>
+          </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Email
-          </label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+        {/* Form */}
+        <div className="bg-slate-900 border border-slate-700 rounded-2xl p-5 space-y-4">
+          <div>
+            <label className="block text-xs text-slate-400 mb-1.5 uppercase tracking-wider">
+              Full Name
+            </label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter your name"
+              className="w-full bg-slate-800 border border-slate-600 text-white rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-slate-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs text-slate-400 mb-1.5 uppercase tracking-wider">
+              Email
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              className="w-full bg-slate-800 border border-slate-600 text-white rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-slate-500"
+            />
+          </div>
+
+          {error && (
+            <div className="bg-red-950/50 border border-red-800 text-red-300 rounded-lg px-4 py-3 text-sm">
+              {error}
+            </div>
+          )}
+
+          <button
+            onClick={handleSubmit}
+            disabled={loading}
+            className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-semibold py-3 rounded-xl transition-colors">
+            {loading ? "Booking..." : "Confirm Booking →"}
+          </button>
         </div>
-
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-
-        <button
-          onClick={handleSubmit}
-          disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
-        >
-          {loading ? "Booking..." : "Confirm Booking"}
-        </button>
       </div>
-    </div>
+    </main>
   );
 }

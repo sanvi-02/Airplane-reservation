@@ -10,29 +10,28 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const booking = await prisma.$transaction(async (tx) => {
-      const seat = await tx.seat.findUnique({ where: { id: seatId } });
-      if (!seat) throw new Error("Seat not found");
-      if (seat.isBooked) throw new Error("Seat already booked");
+    const seat = await prisma.seat.findUnique({ where: { id: seatId } });
+    if (!seat) return NextResponse.json({ error: "Seat not found" }, { status: 404 });
+    if (seat.isBooked) return NextResponse.json({ error: "Seat already booked" }, { status: 409 });
 
-      await tx.seat.update({
-        where: { id: seatId },
-        data: { isBooked: true },
-      });
+    await prisma.seat.update({
+      where: { id: seatId },
+      data: { isBooked: true },
+    });
 
-      return tx.booking.create({
-        data: {
-          referenceCode: nanoid(8).toUpperCase(),
-          passengerName,
-          passengerEmail,
-          seatId,
-        },
-        include: { seat: { include: { flight: true } } },
-      });
+    const booking = await prisma.booking.create({
+      data: {
+        referenceCode: nanoid(8).toUpperCase(),
+        passengerName,
+        passengerEmail,
+        seatId,
+      },
+      include: { seat: { include: { flight: true } } },
     });
 
     return NextResponse.json(booking, { status: 201 });
   } catch (err) {
-    return NextResponse.json({ error: "Booking failed" }, { status: 500 });
+    console.error("Booking error:", err);
+    return NextResponse.json({ error: (err as Error).message }, { status: 500 });
   }
 }
