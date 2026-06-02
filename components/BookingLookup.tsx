@@ -30,6 +30,7 @@ export default function BookingLookup() {
   const [cancellingId, setCancellingId] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [searched, setSearched] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   async function handleLookup() {
     if (!email) {
@@ -68,8 +69,8 @@ export default function BookingLookup() {
         setError("Cancellation failed. Try again.");
         return;
       }
-      // optimistically remove from list
       setBookings((prev) => prev.filter((b) => b.id !== bookingId));
+      setSuccessMessage("Booking cancelled successfully."); // ← add this
     } catch {
       setError("Something went wrong.");
     } finally {
@@ -80,7 +81,7 @@ export default function BookingLookup() {
   return (
     <div className="max-w-xl mx-auto">
       {/* Email search */}
-      <div className="flex gap-3 mb-8">
+      <div className="flex flex-col sm:flex-row gap-3 mb-8">
         <input
           type="email"
           value={email}
@@ -91,13 +92,19 @@ export default function BookingLookup() {
         <button
           onClick={handleLookup}
           disabled={loading}
-          className="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition"
+          className="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition w-full sm:w-auto"
         >
           {loading ? "Searching..." : "Find Bookings"}
         </button>
       </div>
 
       {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+
+      {successMessage && (
+        <p className="text-green-600 text-sm mb-4 text-center">
+          {successMessage}
+        </p>
+      )}
 
       {/* Results */}
       {searched && bookings.length === 0 && (
