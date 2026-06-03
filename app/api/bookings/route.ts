@@ -4,10 +4,14 @@ import { createLocalBooking } from "@/lib/local-store";
 import { nanoid } from "nanoid";
 
 export async function POST(req: NextRequest) {
-  const { seatId, passengerName, passengerEmail } = await req.json();
+  const { seatId, passengerName, passengerEmail, paymentId } = await req.json();
 
   if (!seatId || !passengerName || !passengerEmail) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+  }
+
+  if (prisma && !paymentId) {
+    return NextResponse.json({ error: "Payment required" }, { status: 400 });
   }
 
   if (!prisma) {
@@ -21,8 +25,13 @@ export async function POST(req: NextRequest) {
 
   try {
     const seat = await prisma.seat.findUnique({ where: { id: seatId } });
-    if (!seat) return NextResponse.json({ error: "Seat not found" }, { status: 404 });
-    if (seat.isBooked) return NextResponse.json({ error: "Seat already booked" }, { status: 409 });
+    if (!seat)
+      return NextResponse.json({ error: "Seat not found" }, { status: 404 });
+    if (seat.isBooked)
+      return NextResponse.json(
+        { error: "Seat already booked" },
+        { status: 409 },
+      );
 
     await prisma.seat.update({
       where: { id: seatId },
@@ -35,6 +44,7 @@ export async function POST(req: NextRequest) {
         passengerName,
         passengerEmail,
         seatId,
+        paymentId,
       },
       include: { seat: { include: { flight: true } } },
     });
@@ -42,6 +52,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(booking, { status: 201 });
   } catch (err) {
     console.error("Booking error:", err);
-    return NextResponse.json({ error: (err as Error).message }, { status: 500 });
+    return NextResponse.json(
+      { error: (err as Error).message },
+      { status: 500 },
+    );
   }
 }
