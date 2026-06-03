@@ -1,4 +1,4 @@
-#  fSkyBook – Airline Reservation System
+#  SkyBook – Airline Reservation System
 
 SkyBook is a full-stack airline reservation platform built with Next.js, TypeScript, Prisma, and PostgreSQL. Users can search flights, select seats, make bookings, manage reservations, and receive booking confirmation emails.
 
