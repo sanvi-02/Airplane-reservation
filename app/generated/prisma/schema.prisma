@@ -34,6 +34,7 @@ model Booking {
   passengerName  String
   passengerEmail String
   seatId         String   @unique
+  paymentId      String?
   seat           Seat     @relation(fields: [seatId], references: [id])
   createdAt      DateTime @default(now())
 }
