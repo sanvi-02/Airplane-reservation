@@ -112,6 +112,5 @@ npm run dev
 
 ## Author
 
-Mannat Gupta
-Sanvi Jain
-Built as a full-stack airline reservation system project using modern web technologies.
+* Mannat Gupta & Sanvi Jain
+* Built as a full-stack airline reservation system project using modern web technologies.
