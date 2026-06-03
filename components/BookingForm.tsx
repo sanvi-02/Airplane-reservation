@@ -289,7 +289,7 @@ export default function BookingForm({
               Test Mode — Use these details
             </p>
             <p className="text-xs text-foreground/50 font-mono">
-              Card: 4111 1111 1111 1111
+              Card: 4100 2800 0000 1007
             </p>
             <p className="text-xs text-foreground/50 font-mono">
               Expiry: Any future date · CVV: Any 3 digits · OTP: 1234
