@@ -2,13 +2,27 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+
+type Booking = {
+  id: string;
+  referenceCode: string;
+  passengerName: string;
+  passengerEmail: string;
+  seat: {
+    seatNumber: string;
+    flight: {
+      flightNumber: string;
+      origin: string;
+      destination: string;
+      price: number;
+    };
+  };
+};
 
 export default function LookupPage() {
-  const router = useRouter();
   const [ref, setRef] = useState("");
   const [loading, setLoading] = useState(false);
-  const [booking, setBooking] = useState<any>(null);
+  const [booking, setBooking] = useState<Booking | null>(null);
   const [error, setError] = useState("");
   const [canceling, setCanceling] = useState(false);
 
@@ -30,7 +44,7 @@ export default function LookupPage() {
       }
 
       setBooking(data);
-    } catch (err) {
+    } catch {
       setError("Failed to fetch booking. Try again.");
     } finally {
       setLoading(false);
@@ -38,6 +52,7 @@ export default function LookupPage() {
   };
 
   const handleCancel = async () => {
+    if (!booking) return;
     if (!confirm("Are you sure you want to cancel this booking? This action cannot be undone.")) return;
 
     setCanceling(true);
@@ -55,7 +70,7 @@ export default function LookupPage() {
       alert("Booking cancelled successfully.");
       setBooking(null);
       setRef("");
-    } catch (err) {
+    } catch {
       alert("Error cancelling booking.");
     } finally {
       setCanceling(false);
@@ -63,76 +78,86 @@ export default function LookupPage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-950 flex flex-col items-center pt-20 px-4">
-      <div className="max-w-md w-full">
-        <Link href="/" className="text-slate-400 hover:text-white mb-6 inline-block text-sm">
-          ← Back to Home
+    <main className="relative min-h-screen bg-background overflow-hidden selection:bg-accent/30 pt-20 px-6 pb-20">
+      {/* Decorative large SVG arc in the background left */}
+      <div className="absolute left-[-20%] top-[10%] z-0 h-[100%] w-1/2 animate-slow-pan opacity-[0.02] pointer-events-none transform -scale-x-100">
+        <svg viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 100 1000 Q 500 100 1000 500" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-white" />
+        </svg>
+      </div>
+
+      <div className="relative z-10 max-w-xl mx-auto">
+        <Link href="/" className="text-xs uppercase tracking-widest text-foreground/50 hover:text-accent transition-colors mb-10 inline-flex items-center gap-2">
+          ← Back
         </Link>
-        <h1 className="text-3xl font-bold text-white mb-2">My Booking</h1>
-        <p className="text-slate-400 text-sm mb-8">
+        <h1 className="text-5xl font-serif font-light text-foreground mb-4">My Booking</h1>
+        <p className="text-foreground/60 text-lg mb-12">
           Enter your reference code to view or cancel your flight.
         </p>
 
-        <form onSubmit={handleLookup} className="flex gap-3 mb-8">
+        <form onSubmit={handleLookup} className="flex gap-4 mb-12">
           <input
             type="text"
             value={ref}
             onChange={(e) => setRef(e.target.value.toUpperCase())}
             placeholder="e.g. A1B2C3D4"
-            className="flex-1 bg-slate-900 border border-slate-700 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-slate-600 font-mono"
+            className="flex-1 bg-transparent border-0 border-b border-white/20 text-foreground py-3 focus:outline-none focus:border-accent transition-colors placeholder:text-foreground/30 font-mono text-lg uppercase tracking-wider"
             required
           />
           <button
             type="submit"
             disabled={loading || !ref.trim()}
-            className="bg-blue-600 hover:bg-blue-500 disabled:bg-slate-800 disabled:text-slate-600 text-white font-semibold px-6 py-3 rounded-xl transition-colors"
-          >
+            className="btn-secondary px-8 text-xs font-bold tracking-widest uppercase disabled:opacity-50 disabled:pointer-events-none">
             {loading ? "Searching..." : "Lookup"}
           </button>
         </form>
 
         {error && (
-          <div className="bg-red-950/50 border border-red-800 text-red-300 rounded-xl px-5 py-4 text-sm mb-6">
+          <div className="border border-red-900/50 bg-red-950/20 text-red-400 rounded-none p-5 text-sm mb-10 animate-[fade-in-up_0.3s_ease-out_both]">
             {error}
           </div>
         )}
 
         {booking && (
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6">
-            <div className="flex justify-between items-start mb-6 border-b border-slate-800 pb-4">
+          <div className="border border-white/10 bg-foreground/[0.02] p-8 relative animate-[fade-in-up_0.6s_ease-out_both]">
+            {/* Top corner details */}
+            <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-accent/40" />
+            
+            <div className="flex justify-between items-start mb-8 pb-6 border-b border-white/5">
               <div>
-                <p className="text-slate-400 text-xs mb-1">Passenger</p>
-                <p className="text-white font-semibold">{booking.passengerName}</p>
-                <p className="text-slate-500 text-xs mt-1">{booking.passengerEmail}</p>
+                <p className="text-[10px] uppercase tracking-widest text-foreground/40 mb-2">Passenger</p>
+                <p className="text-xl font-light text-foreground">{booking.passengerName}</p>
+                <p className="text-sm font-serif text-accent italic mt-1">{booking.passengerEmail}</p>
               </div>
               <div className="text-right">
-                <span className="bg-green-950/50 text-green-400 border border-green-800 text-xs px-2 py-1 rounded font-medium">
+                <span className="text-[10px] uppercase tracking-widest text-[#12100E] bg-accent px-3 py-1 font-bold">
                   Confirmed
                 </span>
               </div>
             </div>
 
-            <div className="space-y-4 mb-6">
+            <div className="space-y-6 mb-10">
               <div className="flex justify-between items-center">
-                <span className="text-slate-400 text-sm">Flight</span>
-                <span className="text-white font-mono bg-slate-800 px-2 py-0.5 rounded text-sm">
+                <span className="text-xs uppercase tracking-widest text-foreground/40">Flight</span>
+                <span className="text-foreground text-sm font-mono tracking-widest border border-white/10 px-2 py-1">
                   {booking.seat.flight.flightNumber}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-slate-400 text-sm">Route</span>
-                <span className="text-white text-sm font-medium">
-                  {booking.seat.flight.origin} → {booking.seat.flight.destination}
+                <span className="text-xs uppercase tracking-widest text-foreground/40">Route</span>
+                <span className="text-foreground text-sm font-medium">
+                  {booking.seat.flight.origin} <span className="text-accent mx-2">→</span> {booking.seat.flight.destination}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-slate-400 text-sm">Seat</span>
-                <span className="text-white text-sm font-medium">{booking.seat.seatNumber}</span>
+                <span className="text-xs uppercase tracking-widest text-foreground/40">Seat</span>
+                <span className="text-foreground text-lg font-light">{booking.seat.seatNumber}</span>
               </div>
-              <div className="flex justify-between items-center border-t border-slate-800 pt-4">
-                <span className="text-slate-400 text-sm">Total Paid</span>
-                <span className="text-white font-bold">
-                  ₹{booking.seat.flight.price.toLocaleString("en-IN")}
+              <div className="flex justify-between items-center border-t border-white/5 pt-6 mt-6">
+                <span className="text-xs uppercase tracking-widest text-foreground/40">Total Paid</span>
+                <span className="text-3xl font-serif text-foreground">
+                  <span className="text-accent text-xl mr-1">₹</span>
+                  {booking.seat.flight.price.toLocaleString("en-IN")}
                 </span>
               </div>
             </div>
@@ -140,8 +165,7 @@ export default function LookupPage() {
             <button
               onClick={handleCancel}
               disabled={canceling}
-              className="w-full bg-red-950/30 hover:bg-red-950 border border-red-900 text-red-400 disabled:opacity-50 font-semibold py-3 rounded-xl transition-colors text-sm"
-            >
+              className="w-full border border-red-900/50 bg-red-950/10 hover:bg-red-950/30 text-red-400 disabled:opacity-50 font-medium tracking-widest uppercase py-4 transition-colors text-xs">
               {canceling ? "Cancelling..." : "Cancel Booking"}
             </button>
           </div>

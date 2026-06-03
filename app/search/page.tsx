@@ -51,7 +51,7 @@ export default function SearchPage() {
         const returnData = await returnRes.json();
         setReturnFlights(returnData);
       }
-    } catch (err) {
+    } catch {
       setError("Unable to load flights. Please try again.");
     } finally {
       setLoading(false);
@@ -59,49 +59,63 @@ export default function SearchPage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-950">
-      <div className="max-w-4xl mx-auto px-6 py-10">
-        <div className="mb-10">
-          <h1 className="text-3xl font-bold text-white mb-2">
-            Search Your Flights
+    <main className="relative min-h-screen bg-background overflow-hidden selection:bg-accent/30">
+      {/* Decorative large SVG arc in the background right */}
+      <div className="absolute right-[-20%] top-[-10%] z-0 h-[120%] w-3/4 animate-slow-pan opacity-[0.03] pointer-events-none">
+        <svg viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 100 1000 Q 500 100 1000 500" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-white" />
+        </svg>
+      </div>
+      <div className="relative z-10 max-w-5xl mx-auto px-6 py-16 sm:py-24">
+        <div className="mb-16 animate-[fade-in-up_0.8s_ease-out_both]">
+          <div className="mb-6 flex items-center gap-4">
+            <div className="h-px w-8 bg-accent/50"></div>
+            <span className="text-xs uppercase tracking-widest text-foreground/50">
+              Find your journey
+            </span>
+          </div>
+          <h1 className="font-serif text-5xl font-light text-foreground mb-4">
+            Search Flights
           </h1>
-          <p className="text-slate-400 mb-8">
-            Select destination and seats.
+          <p className="text-foreground/60 text-lg max-w-xl">
+            Select your origin, destination, and dates to discover the perfect itinerary.
           </p>
-          <SearchForm onSearch={handleSearch} loading={loading} />
+          <div className="mt-10">
+            <SearchForm onSearch={handleSearch} loading={loading} />
+          </div>
         </div>
 
         {loading && (
-          <div className="flex flex-col items-center gap-3 py-16 text-slate-400">
-            <div className="w-8 h-8 border-2 border-slate-600 border-t-blue-400 rounded-full animate-spin" />
-            <p>Search Flights</p>
+          <div className="flex flex-col items-center gap-4 py-24 text-foreground/60 animate-pulse">
+            <div className="w-10 h-10 border border-foreground/20 border-t-accent rounded-full animate-spin" />
+            <p className="text-sm tracking-widest uppercase">Searching...</p>
           </div>
         )}
 
         {!loading && error && (
-          <div className="bg-red-950/50 border border-red-800 text-red-300 rounded-xl px-5 py-4 text-sm">
+          <div className="border border-red-900/50 bg-red-950/20 text-red-400 rounded-none p-5 text-sm mb-10">
             {error}
           </div>
         )}
 
         {!loading && searched && outboundFlights.length === 0 && !error && (
-          <div className="text-center py-16 text-slate-500">
-            <p className="text-4xl mb-3">🔍</p>
-            <p className="text-lg font-medium text-slate-300">
+          <div className="text-center py-24 text-foreground/50 animate-[fade-in-up_0.8s_ease-out_both]">
+            <p className="text-4xl mb-4 font-light text-accent">!</p>
+            <p className="text-xl font-serif text-foreground/80 mb-2">
               No flights available for outbound journey
             </p>
-            <p className="text-sm mt-1">
-             Try a different date or route.
+            <p className="text-sm">
+              Try adjusting your route or dates.
             </p>
           </div>
         )}
 
         {!loading && outboundFlights.length > 0 && (
-          <div className="mb-10">
-            <h2 className="text-xl font-bold text-white mb-4 border-b border-slate-800 pb-2">
-              Outbound: {outboundFlights[0]?.origin} → {outboundFlights[0]?.destination}
+          <div className="mb-16 animate-[fade-in-up_0.8s_ease-out_both]">
+            <h2 className="text-2xl font-serif font-light text-foreground mb-8 border-b border-white/10 pb-4">
+              Outbound <span className="text-accent italic text-xl ml-2">{outboundFlights[0]?.origin} — {outboundFlights[0]?.destination}</span>
             </h2>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-6">
               {outboundFlights.map((flight) => (
                 <FlightCard key={flight.id} flight={flight} />
               ))}
@@ -109,19 +123,12 @@ export default function SearchPage() {
           </div>
         )}
 
-        {!loading && searched && returnFlights.length === 0 && outboundFlights.length > 0 && !error && (
-           // Only show "No return flights" if they actually searched for a return flight (which means returnFlights logic ran but returned empty array)
-           // But we don't store `hasReturnDate` strictly, so let's rely on the state being empty.
-           // To be safe, we will just render the Return Flights section only if there are return flights.
-           null
-        )}
-
         {!loading && returnFlights.length > 0 && (
-          <div>
-            <h2 className="text-xl font-bold text-white mb-4 border-b border-slate-800 pb-2">
-              Return: {returnFlights[0]?.origin} → {returnFlights[0]?.destination}
+          <div className="animate-[fade-in-up_0.8s_ease-out_both]">
+            <h2 className="text-2xl font-serif font-light text-foreground mb-8 border-b border-white/10 pb-4">
+              Return <span className="text-accent italic text-xl ml-2">{returnFlights[0]?.origin} — {returnFlights[0]?.destination}</span>
             </h2>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-6">
               {returnFlights.map((flight) => (
                 <FlightCard key={flight.id} flight={flight} />
               ))}

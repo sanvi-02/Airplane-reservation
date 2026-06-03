@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { cancelLocalBooking } from "@/lib/local-store";
 
 export async function DELETE(
   req: NextRequest,
@@ -9,6 +10,14 @@ export async function DELETE(
 
   if (!id) {
     return NextResponse.json({ error: "Booking ID is required" }, { status: 400 });
+  }
+
+  if (!prisma) {
+    const cancelled = await cancelLocalBooking(id);
+    if (!cancelled) {
+      return NextResponse.json({ error: "Booking not found" }, { status: 404 });
+    }
+    return NextResponse.json({ success: true });
   }
 
   try {

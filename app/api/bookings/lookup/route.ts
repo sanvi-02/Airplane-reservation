@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { lookupLocalBooking } from "@/lib/local-store";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -10,6 +11,14 @@ export async function GET(req: NextRequest) {
       { error: "Reference code is required" },
       { status: 400 }
     );
+  }
+
+  if (!prisma) {
+    const booking = await lookupLocalBooking(ref);
+    if (!booking) {
+      return NextResponse.json({ error: "Booking not found" }, { status: 404 });
+    }
+    return NextResponse.json(booking);
   }
 
   try {

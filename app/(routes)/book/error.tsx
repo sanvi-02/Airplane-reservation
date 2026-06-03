@@ -14,23 +14,23 @@ export default function ErrorBoundary({
   }, [error]);
 
   return (
-    <main className="min-h-screen bg-slate-950 flex flex-col items-center justify-center px-4">
-      <div className="bg-slate-900 border border-slate-700 rounded-2xl p-8 text-center max-w-md w-full">
-        <p className="text-5xl mb-4">⚠️</p>
-        <h2 className="text-xl font-bold text-white mb-2">Something went wrong!</h2>
-        <p className="text-slate-400 text-sm mb-6">
-          We couldn't load the booking page. The server might be busy or unavailable.
+    <main className="min-h-screen bg-background flex flex-col items-center justify-center px-4">
+      <div className="bg-foreground/[0.02] border border-white/10 p-10 text-center max-w-md w-full animate-[fade-in-up_0.4s_ease-out_both]">
+        <p className="text-4xl mb-4 font-light text-red-400">!</p>
+        <h2 className="text-2xl font-serif text-foreground mb-4">Something went wrong!</h2>
+        <p className="text-foreground/50 text-sm mb-10 tracking-widest uppercase">
+          We could not load the booking page. The server might be busy or unavailable.
         </p>
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex flex-col sm:flex-row gap-4">
           <button
             onClick={() => reset()}
-            className="flex-1 bg-slate-800 hover:bg-slate-700 text-white font-semibold py-3 px-4 rounded-xl transition-colors text-sm"
+            className="flex-1 bg-white/5 hover:bg-white/10 border border-white/10 text-foreground text-xs font-bold tracking-widest uppercase py-4 transition-colors"
           >
             Try Again
           </button>
           <a
             href="/search"
-            className="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-4 rounded-xl transition-colors text-sm"
+            className="flex-1 btn-secondary text-xs font-bold tracking-widest uppercase py-4 transition-colors flex items-center justify-center"
           >
             Back to Search
           </a>

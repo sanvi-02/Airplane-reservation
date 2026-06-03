@@ -13,74 +13,72 @@ export default function FlightCard({ flight }: Props) {
   const isFull = seatsLeft === 0;
 
   return (
-    <div className="group relative bg-slate-900/50 backdrop-blur-sm border border-slate-700/80 hover:border-blue-500/50 hover:shadow-[0_8px_30px_rgb(0,0,0,0.4)] rounded-2xl p-6 transition-all duration-300">
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/5 to-purple-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none" />
-      <div className="relative flex flex-col md:flex-row md:items-center gap-6">
-        <div className="flex-1">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-blue-400 text-sm shadow-inner border border-slate-700">
-              ✈
-            </div>
-            <span className="text-xs font-mono bg-slate-800/80 border border-slate-700 text-slate-300 px-2.5 py-1 rounded-md">
-              {flight.flightNumber}
+    <div className="group relative flex flex-col md:flex-row md:items-center justify-between gap-8 py-8 border-b border-white/5 transition-all hover:bg-foreground/[0.02]">
+      {/* Decorative vertical line */}
+      <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-accent scale-y-0 group-hover:scale-y-100 transition-transform origin-top duration-500"></div>
+      
+      <div className="flex-1 pl-4 md:pl-6">
+        <div className="flex items-center gap-4 mb-6">
+          <div className="text-xs tracking-widest uppercase text-foreground/50 font-medium">
+            Flight <span className="text-accent ml-1">{flight.flightNumber}</span>
+          </div>
+          {isAlmostFull && !isFull && (
+            <span className="text-[10px] tracking-widest uppercase text-accent border border-accent/30 px-2 py-0.5 rounded-sm">
+              {seatsLeft} left
             </span>
-            {isAlmostFull && !isFull && (
-              <span className="text-xs bg-orange-950 text-orange-400 border border-orange-800 px-2 py-0.5 rounded">
-                Only {seatsLeft} seats left!
-              </span>
-            )}
-            {isFull && (
-              <span className="text-xs bg-red-950 text-red-400 border border-red-800 px-2 py-0.5 rounded">
-                Full
-              </span>
-            )}
-          </div>
-
-          <div className="flex items-center gap-4">
-            <div className="text-center">
-              <p className="text-2xl font-bold text-white tabular-nums">
-                {flight.departureTime}
-              </p>
-              <p className="text-sm text-slate-400 font-medium">
-                {flight.origin}
-              </p>
-            </div>
-            <div className="flex-1 flex flex-col items-center gap-1">
-              <p className="text-xs text-slate-500">{flight.duration}</p>
-              <div className="w-full flex items-center gap-1">
-                <div className="flex-1 h-px bg-slate-700" />
-                <span className="text-slate-500 text-xs">✈</span>
-                <div className="flex-1 h-px bg-slate-700" />
-              </div>
-              <p className="text-xs text-slate-600">Direct</p>
-            </div>
-            <div className="text-center">
-              <p className="text-2xl font-bold text-white tabular-nums">
-                {flight.arrivalTime}
-              </p>
-              <p className="text-sm text-slate-400 font-medium">
-                {flight.destination}
-              </p>
-            </div>
-          </div>
+          )}
+          {isFull && (
+            <span className="text-[10px] tracking-widest uppercase text-red-400 border border-red-400/30 px-2 py-0.5 rounded-sm">
+              Full
+            </span>
+          )}
         </div>
 
-        <div className="hidden md:block w-px h-16 bg-gradient-to-b from-slate-800 via-slate-600 to-slate-800" />
-
-        <div className="flex md:flex-col items-center md:items-end justify-between md:justify-center gap-3 md:min-w-[140px]">
-          <div className="text-right">
-            <p className="text-3xl font-extrabold text-white tracking-tight">
-              ₹{flight.price.toLocaleString("en-IN")}
+        <div className="flex items-center gap-6">
+          <div className="text-left w-20">
+            <p className="text-3xl font-light text-foreground tracking-tight tabular-nums">
+              {flight.departureTime}
             </p>
-            <p className="text-xs text-slate-400 uppercase tracking-wider mt-1">per person</p>
+            <p className="text-[10px] uppercase tracking-widest text-foreground/40 mt-1">
+              {flight.origin}
+            </p>
           </div>
-          <button
-            onClick={() => router.push(`/seats?flightId=${flight.id}`)}
-            disabled={isFull}
-            className="relative overflow-hidden group/btn bg-blue-600 hover:bg-blue-500 disabled:bg-slate-800 disabled:text-slate-600 disabled:cursor-not-allowed text-white text-sm font-semibold px-6 py-3 rounded-xl transition-all shadow-[0_0_15px_rgba(37,99,235,0.3)] hover:shadow-[0_0_25px_rgba(37,99,235,0.5)] whitespace-nowrap active:scale-95">
-            <span className="relative z-10">{isFull ? "Unavailable" : "Select Seat"}</span>
-          </button>
+          
+          <div className="flex-1 flex flex-col items-center max-w-[200px]">
+            <p className="text-[10px] uppercase tracking-widest text-foreground/40 mb-2">{flight.duration}</p>
+            <div className="w-full flex items-center gap-2">
+              <div className="flex-1 h-px bg-white/10" />
+              <div className="w-1.5 h-1.5 rounded-full border border-accent" />
+              <div className="flex-1 h-px bg-white/10" />
+            </div>
+            <p className="text-[10px] uppercase tracking-widest text-accent mt-2">Direct</p>
+          </div>
+
+          <div className="text-right w-20">
+            <p className="text-3xl font-light text-foreground tracking-tight tabular-nums">
+              {flight.arrivalTime}
+            </p>
+            <p className="text-[10px] uppercase tracking-widest text-foreground/40 mt-1">
+              {flight.destination}
+            </p>
+          </div>
         </div>
+      </div>
+
+      <div className="flex md:flex-col items-center md:items-end justify-between md:justify-center gap-4 pr-4 md:pr-6 border-t md:border-t-0 md:border-l border-white/5 pt-6 md:pt-0 pl-0 md:pl-8">
+        <div className="text-right">
+          <p className="text-[10px] uppercase tracking-widest text-foreground/40 mb-1">Per Person</p>
+          <p className="text-4xl font-serif text-foreground">
+            <span className="text-accent text-xl mr-1">₹</span>
+            {flight.price.toLocaleString("en-IN")}
+          </p>
+        </div>
+        <button
+          onClick={() => router.push(`/seats?flightId=${flight.id}`)}
+          disabled={isFull}
+          className="btn-secondary px-8 py-3 text-xs tracking-widest uppercase font-medium disabled:opacity-50 disabled:pointer-events-none">
+          {isFull ? "Unavailable" : "Select"}
+        </button>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { searchLocalFlights } from "@/lib/local-store";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -11,6 +12,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(
       { error: "origin, destination, aur date zaroori hain" },
       { status: 400 }
+    );
+  }
+
+  if (!prisma) {
+    return NextResponse.json(
+      await searchLocalFlights(origin, destination, date)
     );
   }
 

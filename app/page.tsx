@@ -1,97 +1,145 @@
 import Link from "next/link";
 
 export default function Home() {
+  const actions = [
+    {
+      title: "Search",
+      copy: "Find available flights by route and date.",
+      href: "/search",
+      cta: "Search flights",
+      delay: "animate-[fade-in-up_0.8s_ease-out_0.2s_both]",
+      size: "col-span-1 md:col-span-2 md:row-span-2 min-h-[300px]",
+    },
+    {
+      title: "Seats",
+      copy: "Choose a seat after selecting a flight.",
+      href: "/search",
+      cta: "Start with search",
+      delay: "animate-[fade-in-up_0.8s_ease-out_0.4s_both]",
+      size: "col-span-1 min-h-[200px] mt-8 md:mt-0",
+    },
+    {
+      title: "Records",
+      copy: "Use a reference code to view or cancel a booking.",
+      href: "/lookup",
+      cta: "Find booking",
+      delay: "animate-[fade-in-up_0.8s_ease-out_0.6s_both]",
+      size: "col-span-1 min-h-[200px] mt-8 md:mt-0",
+    },
+  ];
+
   return (
-    <main className="min-h-screen bg-slate-950 text-white relative overflow-hidden selection:bg-blue-500/30">
-      {/* Ambient background glows */}
-      <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-blue-600/20 blur-[120px] pointer-events-none" />
-      <div className="absolute top-[60%] -right-[10%] w-[50%] h-[50%] rounded-full bg-indigo-500/10 blur-[100px] pointer-events-none" />
+    <main className="relative min-h-screen overflow-hidden bg-background text-foreground selection:bg-accent/30">
+      {/* Decorative large SVG arc in the background right */}
+      <div className="absolute right-[-10%] top-[-10%] z-0 h-[120%] w-3/4 animate-slow-pan opacity-10 pointer-events-none">
+        <svg viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M 100 1000 Q 500 100 1000 500"
+            stroke="currentColor"
+            strokeWidth="1"
+            strokeLinecap="round"
+            className="text-white"
+          />
+          <circle cx="100" cy="1000" r="4" fill="currentColor" />
+          <circle cx="1000" cy="500" r="4" fill="currentColor" />
+        </svg>
+      </div>
 
-      <section className="relative mx-auto grid max-w-6xl gap-10 px-6 py-20 lg:grid-cols-[1fr_420px] lg:items-center">
-        <div className="relative z-10 animate-fade-in-up">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-medium tracking-wide mb-6">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-            </span>
-            FLIGHT RESERVATION SYSTEM
+      <section className="relative z-10 mx-auto max-w-7xl px-6 pt-24 sm:pt-32 pb-20">
+        {/* Asymmetric Hero layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          <div className="lg:col-span-7 flex flex-col justify-center">
+            {/* Replaced uppercase label with thin rule & muted label */}
+            <div className="mb-8 flex items-center gap-4 animate-[fade-in-up_0.8s_ease-out_both]">
+              <div className="h-px w-12 bg-accent/50"></div>
+              <span className="text-sm font-medium tracking-wide text-foreground/60">
+                Premium Reservations
+              </span>
+            </div>
+
+            <h1 className="font-serif text-5xl font-light tracking-tight sm:text-7xl leading-[1.1]">
+              <span className="inline-block animate-slide-up-word [animation-delay:0.1s]">Book</span>{" "}
+              <span className="inline-block animate-slide-up-word [animation-delay:0.15s]">flights</span>{" "}
+              <span className="inline-block animate-slide-up-word [animation-delay:0.2s]">without</span>{" "}
+              <span className="inline-block animate-slide-up-word [animation-delay:0.25s]">the</span>{" "}
+              <span className="inline-block animate-slide-up-word [animation-delay:0.3s] font-medium italic text-accent pr-4">
+                noise.
+              </span>
+            </h1>
+
+            <p className="mt-8 max-w-md text-lg leading-relaxed text-foreground/60 animate-[fade-in-up_0.8s_ease-out_0.4s_both]">
+              Search by route, select a seat, confirm passenger details, and use
+              your reference code to manage the booking later.
+            </p>
+
+            {/* Micro-detail: Boarding pass line */}
+            <div className="mt-10 flex items-center gap-2 opacity-50 animate-[fade-in-up_0.8s_ease-out_0.5s_both]">
+              <div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
+              <div className="h-px w-32 border-b border-dashed border-accent/60"></div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-accent rotate-45">
+                <path d="M17.8 19.2L16 11l4-4c1.1-1.1 1.1-2.9 0-4s-2.9-1.1-4 0l-4 4-8.2-1.8-1.8 1.8 7 3.5-3.5 3.5-2.5-1-1.5 1.5 3.5 3.5 3.5 3.5 1.5-1.5-1-2.5 3.5-3.5 3.5 7 1.8-1.8z"></path>
+              </svg>
+              <div className="h-px w-8 border-b border-dashed border-accent/60"></div>
+              <div className="w-1.5 h-1.5 rounded-full border border-accent"></div>
+            </div>
+
+            <div className="mt-12 flex flex-col gap-6 sm:flex-row sm:items-center animate-[fade-in-up_0.8s_ease-out_0.6s_both]">
+              <Link
+                href="/search"
+                className="shimmer-bg inline-flex h-14 items-center justify-center rounded-full px-8 text-sm font-medium tracking-wide text-[#12100e] transition-all hover:scale-105 hover:shadow-[0_0_20px_rgba(201,151,74,0.3)]"
+              >
+                Search flights
+              </Link>
+              <Link
+                href="/lookup"
+                className="btn-secondary inline-flex h-14 items-center justify-center rounded-none border border-foreground/20 px-8 text-sm font-medium tracking-wide text-foreground"
+              >
+                My booking
+              </Link>
+            </div>
           </div>
-          <h1 className="max-w-3xl text-5xl font-extrabold leading-[1.1] tracking-tight sm:text-6xl lg:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
-            Search flights, choose a seat, and confirm.
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-slate-400">
-            SkyBook is a focused flight-booking application built with Next.js,
-            Prisma, and PostgreSQL. It supports route search, live seat
-            availability, and cancellation-ready records.
-          </p>
-          <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+
+          <div className="lg:col-span-5 relative hidden lg:block">
+            {/* Subtle radial gradient/vignette for depth */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,var(--background)_70%)] z-10 pointer-events-none"></div>
+          </div>
+        </div>
+      </section>
+
+      {/* Cards Section: Masonry-style / staggered */}
+      <section className="relative z-10 mx-auto max-w-7xl px-6 py-24">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-0">
+          {actions.map((action, idx) => (
             <Link
-              href="/search"
-              className="group relative inline-flex h-14 items-center justify-center gap-2 overflow-hidden rounded-xl bg-blue-600 px-8 text-sm font-semibold text-white transition-all hover:bg-blue-500 hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(37,99,235,0.4)]"
+              key={action.title}
+              href={action.href}
+              className={`group flex flex-col justify-between p-10 transition-all duration-500 hover:bg-foreground/[0.02] ${action.size} ${action.delay}`}
             >
-              <span>Find Flights</span>
-              <span className="transition-transform group-hover:translate-x-1">→</span>
-            </Link>
-            <a
-              href="#features"
-              className="inline-flex h-14 items-center justify-center rounded-xl border border-slate-700 bg-slate-900/50 backdrop-blur-sm px-8 text-sm font-semibold text-slate-300 transition-all hover:border-slate-500 hover:bg-slate-800 hover:text-white"
-            >
-              View Features
-            </a>
-          </div>
-        </div>
-
-        <div className="relative z-10 rounded-2xl border border-slate-700/50 bg-slate-900/60 backdrop-blur-xl p-6 shadow-2xl shadow-black/50 transition-transform hover:-translate-y-2 duration-500">
-          <div className="absolute -inset-0.5 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 opacity-50 blur pointer-events-none" />
-          <div className="relative mb-6 flex items-center justify-between border-b border-slate-800/80 pb-5">
-            <div>
-              <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                Today
-              </p>
-              <p className="text-lg font-semibold">Delhi to Mumbai</p>
-            </div>
-            <span className="rounded bg-emerald-950 px-2 py-1 text-xs font-medium text-emerald-300">
-              Seats open
-            </span>
-          </div>
-          {[
-            ["SK101", "06:00", "08:10", "₹4,500"],
-            ["SK102", "14:00", "16:05", "₹3,800"],
-            ["SK301", "19:20", "21:40", "₹5,100"],
-          ].map(([flight, depart, arrive, price]) => (
-            <div
-              key={flight}
-              className="grid grid-cols-[70px_1fr_80px] items-center gap-3 border-b border-slate-800 py-4 last:border-0"
-            >
-              <span className="font-mono text-xs text-slate-400">{flight}</span>
-              <div className="flex items-center gap-3">
-                <span className="text-lg font-bold tabular-nums">{depart}</span>
-                <span className="h-px flex-1 bg-slate-700" />
-                <span className="text-lg font-bold tabular-nums">{arrive}</span>
+              <div>
+                <h2 className="font-serif text-3xl font-light">{action.title}</h2>
+                <p className="mt-4 max-w-sm text-base leading-relaxed text-foreground/50 transition-colors group-hover:text-foreground/70">
+                  {action.copy}
+                </p>
               </div>
-              <span className="text-right text-sm font-semibold">{price}</span>
-            </div>
+              <div className="mt-12 flex items-center gap-3 text-sm tracking-widest uppercase text-accent transition-transform group-hover:translate-x-2">
+                <span>{action.cta}</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14"></path>
+                  <path d="M12 5l7 7-7 7"></path>
+                </svg>
+              </div>
+            </Link>
           ))}
         </div>
       </section>
 
-      <section
-        id="features"
-        className="border-t border-slate-800 bg-slate-900/40 px-6 py-10"
-      >
-        <div className="mx-auto grid max-w-6xl gap-4 md:grid-cols-3">
-          {[
-            ["Search", "Filter by route and travel date."],
-            ["Seats", "View availability before booking."],
-            ["Records", "Generate references for later lookup."],
-          ].map(([title, copy]) => (
-            <div key={title} className="rounded-lg border border-slate-800 p-5">
-              <h2 className="font-semibold">{title}</h2>
-              <p className="mt-2 text-sm leading-6 text-slate-400">{copy}</p>
-            </div>
-          ))}
+      {/* Minimal footer */}
+      <footer className="relative z-10 mx-auto max-w-7xl px-6 py-8 border-t border-white/5">
+        <div className="flex justify-between items-center text-xs tracking-widest text-foreground/40 uppercase">
+       
+          
         </div>
-      </section>
+      </footer>
     </main>
   );
 }

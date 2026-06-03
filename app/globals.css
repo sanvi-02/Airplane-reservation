@@ -1,7 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  --animate-fade-in-up: fade-in-up 0.8s ease-out;
+  --color-background: #12100e;
+  --color-foreground: #ededed;
+  --color-accent: #c9974a;
+  
+  --font-sans: var(--font-outfit), "Inter", sans-serif;
+  --font-serif: var(--font-cormorant), "Times New Roman", serif;
+
+  --animate-fade-in-up: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-slide-up-word: slide-up-word 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-shimmer: shimmer 2s infinite linear;
+  --animate-slow-pan: slow-pan 30s infinite alternate ease-in-out;
 
   @keyframes fade-in-up {
     from {
@@ -13,29 +23,109 @@
       transform: translateY(0);
     }
   }
+
+  @keyframes slide-up-word {
+    from {
+      opacity: 0;
+      transform: translateY(30px) rotate(2deg);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) rotate(0);
+    }
+  }
+
+  @keyframes shimmer {
+    from {
+      background-position: 200% center;
+    }
+    to {
+      background-position: -200% center;
+    }
+  }
+
+  @keyframes slow-pan {
+    from {
+      transform: translateX(0) translateY(0) scale(1);
+    }
+    to {
+      transform: translateX(-3%) translateY(2%) scale(1.02);
+    }
+  }
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: Arial, Helvetica, sans-serif;
-  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #12100e;
+  --foreground: #f4f4f5;
+  --accent: #c9974a;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  cursor: crosshair;
+}
+
+/* Custom interactive cursors */
+a, button, input, [role="button"] {
+  cursor: pointer;
+}
+
+/* Base utility for shimmering gradients */
+.shimmer-bg {
+  background: linear-gradient(
+    90deg,
+    var(--accent) 0%,
+    #dfb676 25%,
+    var(--accent) 50%,
+    var(--accent) 100%
+  );
+  background-size: 200% auto;
+}
+
+/* Secondary button hover utility */
+.btn-secondary {
+  position: relative;
+  overflow: hidden;
+  transition: color 0.3s ease;
+}
+.btn-secondary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background-color: var(--accent);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: -1;
+}
+.btn-secondary:hover::before {
+  transform: translateX(100%);
+}
+.btn-secondary:hover {
+  color: #12100e;
+  border-color: var(--accent);
+}
+
+/* Underline link effect */
+.link-underline {
+  position: relative;
+  display: inline-block;
+}
+.link-underline::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 1px;
+  bottom: 0;
+  left: 0;
+  background-color: currentColor;
+  transform-origin: bottom left;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.link-underline:hover::after {
+  transform: scaleX(1);
 }
