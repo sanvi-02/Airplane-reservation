@@ -108,7 +108,7 @@ export default function SearchForm({ onSearch, loading }: Props) {
         type="submit"
         disabled={loading || !origin || !destination || !date}
         className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-semibold rounded-lg px-6 py-3 transition-colors text-sm">
-        {loading ? "Dhundh raha hai..." : "Flights Dhundho ✈"}
+        {loading ? "Searching..." : "Search flights ✈"}
       </button>
     </form>
   );
