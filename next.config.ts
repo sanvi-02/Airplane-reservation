@@ -11,6 +11,12 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: projectRoot,
   },
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals.push("bufferutil", "utf-8-validate");
+    }
+    return config;
+  },
 };
 
 export default nextConfig;
