@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { createLocalBooking } from "@/lib/local-store";
 import { nanoid } from "nanoid";
 
 export async function POST(req: NextRequest) {
@@ -7,6 +8,15 @@ export async function POST(req: NextRequest) {
 
   if (!seatId || !passengerName || !passengerEmail) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+  }
+
+  if (!prisma) {
+    const result = await createLocalBooking({
+      seatId,
+      passengerName,
+      passengerEmail,
+    });
+    return NextResponse.json(result.body, { status: result.status });
   }
 
   try {

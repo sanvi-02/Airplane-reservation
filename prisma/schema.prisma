@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../app/generated/prisma"
+  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -8,24 +8,29 @@ datasource db {
 }
 
 model Flight {
-  id             String   @id @default(cuid())
-  flightNumber   String   @unique
-  origin         String
-  destination    String
-  departureTime  DateTime
-  arrivalTime    DateTime
-  price          Int
-  seats          Seat[]
-  createdAt      DateTime @default(now())
+  id            String   @id @default(cuid())
+  flightNumber  String   @unique
+  origin        String
+  destination   String
+  departureTime DateTime
+  arrivalTime   DateTime
+  price         Int
+  seats         Seat[]
+  createdAt     DateTime @default(now())
+
+  @@index([origin, destination, departureTime])
 }
 
 model Seat {
-  id        String  @id @default(cuid())
+  id         String   @id @default(cuid())
   seatNumber String
-  isBooked  Boolean @default(false)
-  flightId  String
-  flight    Flight  @relation(fields: [flightId], references: [id])
+  isBooked  Boolean  @default(false)
+  flightId   String
+  flight     Flight   @relation(fields: [flightId], references: [id], onDelete: Cascade)
   booking    Booking?
+
+  @@unique([flightId, seatNumber])
+  @@index([flightId, isBooked])
 }
 
 model Booking {
@@ -34,6 +39,8 @@ model Booking {
   passengerName  String
   passengerEmail String
   seatId         String   @unique
-  seat           Seat     @relation(fields: [seatId], references: [id])
+  seat           Seat     @relation(fields: [seatId], references: [id], onDelete: Cascade)
   createdAt      DateTime @default(now())
+
+  @@index([passengerEmail])
 }

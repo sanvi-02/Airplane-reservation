@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "../../../lib/prisma";
+import { prisma } from "@/lib/db";
+import { getLocalSeats } from "@/lib/local-store";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -10,6 +11,14 @@ export async function GET(req: NextRequest) {
       { error: "flightId zaroori hai" },
       { status: 400 }
     );
+  }
+
+  if (!prisma) {
+    const result = await getLocalSeats(flightId);
+    if (!result) {
+      return NextResponse.json({ error: "Flight not found" }, { status: 404 });
+    }
+    return NextResponse.json(result);
   }
 
   try {
@@ -36,6 +45,13 @@ export async function PATCH(req: NextRequest) {
 
   if (!seatId) {
     return NextResponse.json({ error: "seatId zaroori hai" }, { status: 400 });
+  }
+
+  if (!prisma) {
+    return NextResponse.json(
+      { error: "Seat locking is handled when the booking is confirmed." },
+      { status: 405 }
+    );
   }
 
   try {

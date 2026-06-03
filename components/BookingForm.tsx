@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface Props {
   flightId: string;
@@ -55,11 +56,7 @@ export default function BookingForm({
         return;
       }
 
-      router.push(
-        `/confirm?ref=${data.referenceCode}&name=${encodeURIComponent(
-          name
-        )}&flight=${flightNumber}&seat=${seatNumber}&from=${origin}&to=${destination}&price=${price}`
-      );
+      router.push(`/confirm?ref=${data.referenceCode}`);
     } catch {
       setError("Something went wrong. Try again.");
     } finally {
@@ -68,49 +65,59 @@ export default function BookingForm({
   }
 
   return (
-    <main className="min-h-screen bg-slate-950">
-      <header className="border-b border-slate-800 px-6 py-4">
-        <div className="max-w-2xl mx-auto flex items-center gap-3">
-          <span className="text-xl font-bold text-white">✈ SkyBook</span>
-        </div>
-      </header>
+    <main className="relative min-h-screen bg-background overflow-hidden selection:bg-accent/30">
+      {/* Decorative large SVG arc in the background right */}
+      <div className="absolute right-[-20%] top-[-10%] z-0 h-[120%] w-3/4 animate-slow-pan opacity-[0.03] pointer-events-none">
+        <svg viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 100 1000 Q 500 100 1000 500" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-white" />
+        </svg>
+      </div>
 
-      <div className="max-w-md mx-auto px-6 py-10">
-        <h1 className="text-2xl font-bold text-white mb-2">Complete Booking</h1>
-        <p className="text-slate-400 text-sm mb-8">
-          Review your details and confirm.
+      <div className="relative z-10 max-w-lg mx-auto px-6 py-20">
+        <Link href={`/seats?flightId=${flightId}`} className="text-xs uppercase tracking-widest text-foreground/50 hover:text-accent transition-colors mb-10 flex items-center gap-2">
+          ← Back to Seats
+        </Link>
+        <h1 className="text-5xl font-serif font-light text-foreground mb-4">Complete Booking</h1>
+        <p className="text-foreground/60 text-lg mb-12">
+          Review your details and confirm your reservation.
         </p>
 
-        {/* Flight Summary */}
-        <div className="bg-slate-900 border border-slate-700 rounded-2xl p-5 mb-6">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-xs font-mono bg-slate-800 text-slate-400 px-2 py-1 rounded">
+        {/* Flight Summary - Premium Ticket Style */}
+        <div className="border border-white/10 bg-foreground/[0.02] p-8 relative mb-12 animate-[fade-in-up_0.4s_ease-out_both]">
+          {/* Top corner details */}
+          <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-accent/40" />
+          
+          <div className="flex items-center gap-2 mb-8">
+            <span className="text-[10px] uppercase tracking-widest text-foreground/50">Flight</span>
+            <span className="text-sm font-mono tracking-widest border border-white/10 px-2 py-1 bg-background text-foreground">
               {flightNumber}
             </span>
           </div>
-          <div className="flex items-center gap-4 mb-4">
+          
+          <div className="flex items-center justify-between mb-8">
             <div>
-              <p className="text-xl font-bold text-white">{origin}</p>
-              <p className="text-slate-400 text-xs">Origin</p>
+              <p className="text-3xl font-light text-foreground">{origin}</p>
+              <p className="text-[10px] uppercase tracking-widest text-foreground/40 mt-1">Origin</p>
             </div>
-            <div className="flex-1 flex items-center gap-1">
-              <div className="flex-1 h-px bg-slate-700" />
-              <span className="text-slate-500 text-xs">✈</span>
-              <div className="flex-1 h-px bg-slate-700" />
+            <div className="flex-1 px-6 flex items-center gap-2 opacity-50">
+              <div className="flex-1 h-px bg-white/10" />
+              <div className="w-1.5 h-1.5 rounded-full border border-accent" />
+              <div className="flex-1 h-px bg-white/10" />
             </div>
             <div className="text-right">
-              <p className="text-xl font-bold text-white">{destination}</p>
-              <p className="text-slate-400 text-xs">Destination</p>
+              <p className="text-3xl font-light text-foreground">{destination}</p>
+              <p className="text-[10px] uppercase tracking-widest text-foreground/40 mt-1">Destination</p>
             </div>
           </div>
-          <div className="flex justify-between border-t border-slate-700 pt-3">
+          
+          <div className="flex justify-between border-t border-white/5 pt-6 mt-6">
             <div>
-              <p className="text-slate-400 text-xs">Seat</p>
-              <p className="text-white font-semibold">{seatNumber}</p>
+              <p className="text-[10px] uppercase tracking-widest text-foreground/40 mb-1">Seat</p>
+              <p className="text-2xl font-light text-foreground">{seatNumber}</p>
             </div>
             <div className="text-right">
-              <p className="text-slate-400 text-xs">Price</p>
-              <p className="text-white font-semibold">
+              <p className="text-[10px] uppercase tracking-widest text-foreground/40 mb-1">Price</p>
+              <p className="text-2xl font-serif text-accent">
                 ₹{price.toLocaleString("en-IN")}
               </p>
             </div>
@@ -118,9 +125,9 @@ export default function BookingForm({
         </div>
 
         {/* Form */}
-        <div className="bg-slate-900 border border-slate-700 rounded-2xl p-5 space-y-4">
+        <div className="space-y-8 animate-[fade-in-up_0.6s_ease-out_both]">
           <div>
-            <label className="block text-xs text-slate-400 mb-1.5 uppercase tracking-wider">
+            <label className="block text-[10px] text-foreground/40 mb-2 uppercase tracking-[0.2em]">
               Full Name
             </label>
             <input
@@ -128,35 +135,37 @@ export default function BookingForm({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter your name"
-              className="w-full bg-slate-800 border border-slate-600 text-white rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-slate-500"
+              className="w-full bg-transparent border-0 border-b border-white/20 text-foreground py-3 text-lg font-light focus:outline-none focus:border-accent transition-colors placeholder:text-foreground/20"
             />
           </div>
 
           <div>
-            <label className="block text-xs text-slate-400 mb-1.5 uppercase tracking-wider">
-              Email
+            <label className="block text-[10px] text-foreground/40 mb-2 uppercase tracking-[0.2em]">
+              Email Address
             </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              className="w-full bg-slate-800 border border-slate-600 text-white rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-slate-500"
+              className="w-full bg-transparent border-0 border-b border-white/20 text-foreground py-3 text-lg font-light focus:outline-none focus:border-accent transition-colors placeholder:text-foreground/20"
             />
           </div>
 
           {error && (
-            <div className="bg-red-950/50 border border-red-800 text-red-300 rounded-lg px-4 py-3 text-sm">
+            <div className="border border-red-900/50 bg-red-950/20 text-red-400 p-4 text-sm mt-4">
               {error}
             </div>
           )}
 
-          <button
-            onClick={handleSubmit}
-            disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-semibold py-3 rounded-xl transition-colors">
-            {loading ? "Booking..." : "Confirm Booking →"}
-          </button>
+          <div className="pt-6">
+            <button
+              onClick={handleSubmit}
+              disabled={loading}
+              className="shimmer-bg w-full inline-flex h-14 items-center justify-center rounded-full text-sm font-bold tracking-widest uppercase text-[#12100E] transition-all hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(201,151,74,0.3)] disabled:opacity-50 disabled:pointer-events-none disabled:grayscale">
+              {loading ? "Booking..." : "Confirm Booking"}
+            </button>
+          </div>
         </div>
       </div>
     </main>
