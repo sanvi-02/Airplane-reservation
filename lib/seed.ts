@@ -8,42 +8,59 @@ const client = new pg.Client({
 
 async function main() {
   await client.connect();
-  console.log("Connected! Seeding...");
+  console.log("✅ Connected! Seeding...");
 
-  const flights = [
-    {
-      number: "SK101",
-      from: "Delhi",
-      to: "Mumbai",
-      dep: "2026-06-15 06:00",
-      arr: "2026-06-15 08:10",
-      price: 4500,
-    },
-    {
-      number: "SK102",
-      from: "Delhi",
-      to: "Mumbai",
-      dep: "2026-06-15 14:00",
-      arr: "2026-06-15 16:05",
-      price: 3800,
-    },
-    {
-      number: "SK201",
-      from: "Mumbai",
-      to: "Bangalore",
-      dep: "2026-06-15 09:00",
-      arr: "2026-06-15 10:30",
-      price: 3200,
-    },
-    {
-      number: "SK301",
-      from: "Delhi",
-      to: "Bangalore",
-      dep: "2026-06-15 07:00",
-      arr: "2026-06-15 09:30",
-      price: 5100,
-    },
+  const cities = [
+    "Delhi",
+    "Mumbai",
+    "Bangalore",
+    "Chennai",
+    "Kolkata",
+    "Hyderabad",
+    "Pune",
+    "Ahmedabad",
+    "Jaipur",
+    "Goa",
   ];
+
+  const AIRLINES = [
+    { code: "AI", mult: 1.15 },
+    { code: "6E", mult: 0.95 },
+    { code: "SG", mult: 0.9 },
+  ];
+
+  const SLOTS = ["06:00", "10:00", "15:00", "20:00"];
+  const DATE = "2026-06-15";
+
+  const flights = [];
+  let flightNo = 3000;
+
+  for (let i = 0; i < cities.length; i++) {
+    for (let j = 0; j < cities.length; j++) {
+      if (i === j) continue;
+
+      const duration = 1 + ((i + j) % 3);
+
+      for (let s = 0; s < SLOTS.length; s++) {
+        const airline = AIRLINES[s % AIRLINES.length];
+        const slot = SLOTS[s];
+        const arrHour = parseInt(slot.split(":")[0]) + duration;
+
+        flights.push({
+          number: `${airline.code}${flightNo++}`,
+          from: cities[i],
+          to: cities[j],
+          dep: `${DATE} ${slot}:00`,
+          arr: `${DATE} ${String(arrHour).padStart(2, "0")}:30:00`,
+          price: Math.round((2500 + (i + j) * 350) * airline.mult),
+        });
+      }
+    }
+  }
+
+  console.log(`✈️ Creating ${flights.length} flights for June 15...`);
+
+  const cols = ["A", "B", "C", "D", "E", "F"];
 
   for (const f of flights) {
     const res = await client.query(
@@ -53,27 +70,26 @@ async function main() {
     );
 
     const flightId = res.rows[0].id;
-    const cols = ["A", "B", "C", "D", "E", "F"];
 
     for (let i = 1; i <= 30; i++) {
-      const seat = `${Math.ceil(i / 6)}${cols[(i - 1) % 6]}`;
-      const booked = Math.random() < 0.3;
+      const seatNumber = `${Math.ceil(i / 6)}${cols[(i - 1) % 6]}`;
       await client.query(
         `INSERT INTO "Seat" ("id", "seatNumber", "isBooked", "flightId")
          VALUES (gen_random_uuid(), $1, $2, $3)`,
-        [seat, booked, flightId]
+        [seatNumber, Math.random() < 0.3, flightId]
       );
     }
 
-    console.log(`✅ ${f.number} created with 30 seats`);
+    console.log(`✅ ${f.number} | ${f.from} → ${f.to} | ${f.dep}`);
   }
 
-  console.log("Done!");
+  console.log("🎉 Done!");
+  console.log(`Total flights: ${flights.length}`);
   await client.end();
 }
 
-main().catch(async (e) => {
-  console.error(e);
+main().catch(async (err) => {
+  console.error("❌ Error:", err);
   await client.end();
   process.exit(1);
 });

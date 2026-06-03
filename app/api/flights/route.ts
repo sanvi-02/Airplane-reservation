@@ -20,8 +20,8 @@ export async function GET(req: NextRequest) {
         origin,
         destination,
         departureTime: {
-          gte: new Date(`${date}T00:00:00`),
-          lte: new Date(`${date}T23:59:59`),
+          gte: new Date(`${date} 00:00:00`),
+          lte: new Date(`${date} 23:59:59`),
         },
       },
       include: {

@@ -190,13 +190,12 @@ export default function SeatsPage() {
                     onClick={() => handleSeatClick(seat)}
                     disabled={seat.isBooked}
                     title={seat.seatNumber}
-                    className={`h-9 rounded text-xs font-medium transition-all ${
-                      seat.isBooked
-                        ? "bg-red-950 border border-red-900 text-red-700 cursor-not-allowed"
-                        : isSelected
+                    className={`h-9 rounded text-xs font-medium transition-all ${seat.isBooked
+                      ? "bg-red-950 border border-red-900 text-red-700 cursor-not-allowed"
+                      : isSelected
                         ? "bg-blue-600 border border-blue-400 text-white scale-105"
                         : "bg-slate-800 border border-slate-600 text-slate-300 hover:bg-slate-700 cursor-pointer"
-                    }`}>
+                      }`}>
                     {seat.seatNumber}
                   </button>
                 );
