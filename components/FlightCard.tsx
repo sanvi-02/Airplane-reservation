@@ -48,7 +48,7 @@ export default function FlightCard({ flight }: Props) {
                 <span className="text-slate-500 text-xs">✈</span>
                 <div className="flex-1 h-px bg-slate-700" />
               </div>
-              <p className="text-xs text-slate-600">Direct</p>
+              <p className="text-xs text-slate-600">Direct Flight</p>
             </div>
             <div className="text-center">
               <p className="text-2xl font-bold text-white tabular-nums">
