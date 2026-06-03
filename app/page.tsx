@@ -1,6 +1,14 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+export default async function Home() {
+  const cookieStore = await cookies();
+  const isLoggedIn = cookieStore.get("isLoggedIn")?.value === "true";
+
+  if (!isLoggedIn) {
+    redirect("/signup");
+  }
   const actions = [
     {
       title: "Search",
@@ -52,16 +60,16 @@ export default function Home() {
             {/* Replaced uppercase label with thin rule & muted label */}
             <div className="mb-8 flex items-center gap-4 animate-[fade-in-up_0.8s_ease-out_both]">
               <div className="h-px w-12 bg-accent/50"></div>
-              <span className="text-sm font-medium tracking-wide text-foreground/60">
+              {/* <span className="text-sm font-medium tracking-wide text-foreground/60">
                 Premium Reservations
-              </span>
+              </span> */}
             </div>
 
             <h1 className="font-serif text-5xl font-light tracking-tight sm:text-7xl leading-[1.1]">
               <span className="inline-block animate-slide-up-word [animation-delay:0.1s]">Book</span>{" "}
               <span className="inline-block animate-slide-up-word [animation-delay:0.15s]">flights</span>{" "}
               <span className="inline-block animate-slide-up-word [animation-delay:0.2s]">without</span>{" "}
-              <span className="inline-block animate-slide-up-word [animation-delay:0.25s]">the</span>{" "}
+              <span className="inline-block animate-slide-up-word [animation-delay:0.25s]">any</span>{" "}
               <span className="inline-block animate-slide-up-word [animation-delay:0.3s] font-medium italic text-accent pr-4">
                 noise.
               </span>
@@ -136,8 +144,8 @@ export default function Home() {
       {/* Minimal footer */}
       <footer className="relative z-10 mx-auto max-w-7xl px-6 py-8 border-t border-white/5">
         <div className="flex justify-between items-center text-xs tracking-widest text-foreground/40 uppercase">
-       
-          
+
+
         </div>
       </footer>
     </main>

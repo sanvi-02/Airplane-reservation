@@ -111,7 +111,7 @@ function ConfirmContent() {
 
         {/* Premium Dark Boarding Pass */}
         <div className="w-full bg-[#161412] border border-white/10 flex flex-col md:flex-row relative">
-          
+
           {/* Main Section */}
           <div className="flex-1 p-8 md:p-12 relative border-b md:border-b-0 md:border-r border-dashed border-white/10">
             {/* Cutouts */}
@@ -161,12 +161,12 @@ function ConfirmContent() {
           <div className="w-full md:w-72 p-8 md:p-12 relative flex flex-col justify-center bg-black/20">
             {/* Cutout for mobile */}
             <div className="absolute left-1/2 -translate-x-1/2 -top-4 w-8 h-8 rounded-full bg-background border-b border-white/10 md:hidden"></div>
-            
+
             <div className="mb-10 text-center md:text-left">
               <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-[0.2em] mb-2">Reference Code</p>
               <p className="text-3xl font-serif text-accent tracking-widest">{booking.referenceCode}</p>
             </div>
-            
+
             <div className="mb-10 text-center md:text-left">
               <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-[0.2em] mb-2">Total Paid</p>
               <p className="text-xl font-light text-foreground">₹{booking.seat.flight.price.toLocaleString("en-IN")}</p>

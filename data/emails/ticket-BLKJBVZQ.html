@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Boarding Pass - SkyBook</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+    
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0a0a0a;
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #ffffff;
+    }
+    
+    .email-container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #121212;
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #161412 0%, #1c1815 100%);
+      padding: 30px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .header-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    
+    .header-logo svg {
+      color: #f59e0b;
+      transform: rotate(45deg);
+    }
+    
+    .header-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      color: #ffffff;
+      margin: 0;
+      letter-spacing: 2px;
+      font-weight: 300;
+    }
+    
+    .header-subtitle {
+      font-size: 11px;
+      color: #f59e0b;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      margin-top: 5px;
+      margin-bottom: 0;
+      font-weight: 600;
+    }
+
+    .content {
+      padding: 30px;
+    }
+
+    .greeting {
+      font-size: 16px;
+      color: #a1a1aa;
+      line-height: 1.6;
+      margin-top: 0;
+      margin-bottom: 24px;
+    }
+
+    .greeting strong {
+      color: #ffffff;
+    }
+
+    /* Ticket / Boarding Pass style */
+    .ticket {
+      background-color: #161412;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 30px;
+    }
+
+    .ticket-header {
+      padding: 20px 24px;
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .ticket-type {
+      font-size: 10px;
+      color: #f59e0b;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-weight: bold;
+    }
+
+    .ticket-ref {
+      font-size: 14px;
+      color: #ffffff;
+      font-family: monospace;
+      letter-spacing: 1px;
+    }
+
+    .ticket-body {
+      padding: 24px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .info-group {
+      margin-bottom: 16px;
+    }
+
+    .info-label {
+      font-size: 9px;
+      color: #a1a1aa;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 4px;
+      font-weight: bold;
+    }
+
+    .info-val {
+      font-size: 16px;
+      color: #ffffff;
+      font-weight: 400;
+    }
+
+    .info-val.accent {
+      color: #f59e0b;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .route-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .route-airport {
+      font-size: 24px;
+      font-weight: 300;
+      color: #ffffff;
+      letter-spacing: 1px;
+    }
+
+    .route-arrow {
+      color: #f59e0b;
+      font-size: 20px;
+      opacity: 0.8;
+    }
+
+    .receipt-section {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .receipt-row:last-child {
+      margin-bottom: 0;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-weight: bold;
+    }
+
+    .receipt-label {
+      color: #a1a1aa;
+    }
+
+    .receipt-value {
+      color: #ffffff;
+    }
+
+    .receipt-value.price {
+      color: #f59e0b;
+      font-size: 16px;
+    }
+
+    /* Barcode styling */
+    .barcode-container {
+      text-align: center;
+      padding: 20px 0 10px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.01);
+    }
+
+    .barcode {
+      height: 48px;
+      display: inline-block;
+      background: repeating-linear-gradient(90deg, #ffffff 0px, #ffffff 2px, transparent 2px, transparent 4px, #ffffff 4px, #ffffff 5px, transparent 5px, transparent 8px, #ffffff 8px, #ffffff 12px, transparent 12px, transparent 14px);
+      opacity: 0.7;
+      width: 80%;
+      max-width: 320px;
+    }
+
+    .barcode-text {
+      font-family: monospace;
+      font-size: 10px;
+      color: #71717a;
+      letter-spacing: 4px;
+      margin-top: 6px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 30px;
+      background-color: #0d0d0d;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .footer-text {
+      font-size: 12px;
+      color: #71717a;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .footer-links {
+      margin-top: 12px;
+    }
+
+    .footer-link {
+      font-size: 12px;
+      color: #f59e0b;
+      text-decoration: none;
+      margin: 0 8px;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+
+    .footer-link:hover {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17.8 19.2L16 11l4-4c1.1-1.1 1.1-2.9 0-4s-2.9-1.1-4 0l-4 4-8.2-1.8-1.8 1.8 7 3.5-3.5 3.5-2.5-1-1.5 1.5 3.5 3.5 3.5 3.5 1.5-1.5-1-2.5 3.5-3.5 3.5 7 1.8-1.8z"></path>
+        </svg>
+        <span class="header-title">SkyBook</span>
+      </div>
+      <p class="header-subtitle">Booking Confirmed</p>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+      <p class="greeting">
+        Hello <strong>sanvi jain</strong>,<br>
+        Thank you for booking with SkyBook. Your reservation is confirmed. Below you will find your boarding pass and ticket information.
+      </p>
+
+      <!-- Ticket -->
+      <div class="ticket">
+        <div class="ticket-header">
+          <span class="ticket-type">Boarding Pass</span>
+          <span class="ticket-ref">REF: BLKJBVZQ</span>
+        </div>
+        
+        <div class="ticket-body">
+          <!-- Route -->
+          <div class="route-container">
+            <span class="route-airport">Delhi</span>
+            <span class="route-arrow">✈</span>
+            <span class="route-airport">Mumbai</span>
+          </div>
+
+          <div class="grid">
+            <div class="info-group">
+              <div class="info-label">Passenger</div>
+              <div class="info-val">sanvi jain</div>
+            </div>
+            <div class="info-group">
+              <div class="info-label">Seat Number</div>
+              <div class="info-val accent">1A</div>
+            </div>
+            <div class="info-group">
+              <div class="info-label">Flight</div>
+              <div class="info-val">SK102</div>
+            </div>
+            <div class="info-group">
+              <div class="info-label">Class</div>
+              <div class="info-val">Premium Economy</div>
+            </div>
+            <div class="info-group" style="grid-column: span 2;">
+              <div class="info-label">Departure Time</div>
+              <div class="info-val">Mon, 15 Jun, 2026, 19:30 IST</div>
+            </div>
+            <div class="info-group" style="grid-column: span 2;">
+              <div class="info-label">Arrival Time</div>
+              <div class="info-val">Mon, 15 Jun, 2026, 21:35 IST</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barcode -->
+        <div class="barcode-container">
+          <div class="barcode"></div>
+          <div class="barcode-text">7471AB3AE5974D80</div>
+        </div>
+      </div>
+
+      <!-- Receipt section -->
+      <div class="receipt-section">
+        <div class="receipt-row">
+          <span class="receipt-label">Ticket Base Fare</span>
+          <span class="receipt-value">₹3,800</span>
+        </div>
+        <div class="receipt-row">
+          <span class="receipt-label">Taxes & Fees</span>
+          <span class="receipt-value">Included</span>
+        </div>
+        <div class="receipt-row">
+          <span class="receipt-label">Total Amount Paid</span>
+          <span class="receipt-value price">₹3,800</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p class="footer-text">
+        This is a simulated flight booking confirmation email from SkyBook.<br>
+        If you have any questions, please contact our support team.
+      </p>
+      <div class="footer-links">
+        <a href="http://localhost:3000" class="footer-link">Home</a>
+        <a href="http://localhost:3000/lookup" class="footer-link">My Bookings</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
