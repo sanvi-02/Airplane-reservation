@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
 
   if (!origin || !destination || !date) {
     return NextResponse.json(
-      { error: "origin, destination, aur date zaroori hain" },
+      { error: "origin, destination, and date are compulsary" },
       { status: 400 }
     );
   }
