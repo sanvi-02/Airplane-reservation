@@ -15,22 +15,17 @@ model Flight {
   departureTime DateTime
   arrivalTime   DateTime
   price         Int
-  seats         Seat[]
   createdAt     DateTime @default(now())
-
-  @@index([origin, destination, departureTime])
+  seats         Seat[]
 }
 
 model Seat {
   id         String   @id @default(cuid())
   seatNumber String
-  isBooked  Boolean  @default(false)
+  isBooked   Boolean  @default(false)
   flightId   String
-  flight     Flight   @relation(fields: [flightId], references: [id], onDelete: Cascade)
   booking    Booking?
-
-  @@unique([flightId, seatNumber])
-  @@index([flightId, isBooked])
+  flight     Flight   @relation(fields: [flightId], references: [id])
 }
 
 model Booking {
@@ -39,9 +34,15 @@ model Booking {
   passengerName  String
   passengerEmail String
   seatId         String   @unique
-  paymentId      String?
-  seat           Seat     @relation(fields: [seatId], references: [id], onDelete: Cascade)
   createdAt      DateTime @default(now())
+  paymentId      String?
+  seat           Seat     @relation(fields: [seatId], references: [id])
+}
 
-  @@index([passengerEmail])
+model User {
+  id        String   @id
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
 }
