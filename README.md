@@ -1,36 +1,117 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+#  fSkyBook – Airline Reservation System
 
-## Getting Started
+SkyBook is a full-stack airline reservation platform built with Next.js, TypeScript, Prisma, and PostgreSQL. Users can search flights, select seats, make bookings, manage reservations, and receive booking confirmation emails.
 
-First, run the development server:
+## Features
+
+*  Search flights by route and date
+*  Real-time seat selection
+*  Flight booking management
+*  User authentication (Login / Signup)
+*  Email confirmation after successful booking
+*  Booking reference code generation
+*  Booking cancellation support
+*  Payment gateway integration (Razorpay)
+*  PostgreSQL database with Prisma ORM
+*  Show Your Bookings
+
+## Tech Stack
+
+### Frontend
+
+* Next.js 15
+* React
+* TypeScript
+* Tailwind CSS
+
+### Backend
+
+* Next.js API Routes
+* Prisma ORM
+* PostgreSQL / NeonDB
+
+### Additional Services
+
+* Resend (Email Service)
+* Razorpay (Payments)
+* Vercel (Deployment)
+
+## Project Structure
+
+app/
+├── api/
+│ ├── bookings/
+│ ├── flights/
+│ ├── signup/
+│ ├── auth/
+│ └── payments/
+├── (routes)/
+│ ├── signup/
+│ ├── login/
+│ ├── search/
+│ ├── seats/
+│ ├── book/
+│ └── confirm/
+├── components/
+├── lib/
+└── prisma/
+
+## Environment Variables
+
+Create a `.env` file:
+
+DATABASE_URL=your_database_url
+
+RESEND_API_KEY=your_resend_api_key
+
+RAZORPAY_KEY_ID=your_key_id
+
+RAZORPAY_KEY_SECRET=your_key_secret
+
+## Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/sanvi-02/Airplane-reservation.git
+cd Airplane-reservation
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Generate Prisma Client:
+
+```bash
+npx prisma generate
+```
+
+Run migrations:
+
+```bash
+npx prisma db push
+```
+
+Start development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Future Improvements
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+* Boarding pass PDF generation
+* Flight status tracking
+* Admin dashboard
+* Multi-city booking support
+* OTP verification
+* Loyalty rewards system
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Author
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Mannat Gupta
+Sanvi Jain
+Built as a full-stack airline reservation system project using modern web technologies.
