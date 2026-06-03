@@ -20,7 +20,9 @@ type Flight = {
   price: number;
 };
 
-export default function SeatsPage() {
+import { Suspense, Fragment } from "react";
+
+function SeatsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const flightId = searchParams.get("flightId");
@@ -36,12 +38,12 @@ export default function SeatsPage() {
     const fetchSeats = async () => {
       try {
         const res = await fetch(`/api/seats?flightId=${flightId}`);
-        if (!res.ok) throw new Error("Seats load nahi ho sake");
+        if (!res.ok) throw new Error("Failed to load seats");
         const data = await res.json();
         setFlight(data.flight);
         setSeats(data.seats);
       } catch (err) {
-        setError("Seats load karne mein problem hui");
+        setError("There was a problem loading the seat map.");
       } finally {
         setLoading(false);
       }
@@ -53,8 +55,8 @@ export default function SeatsPage() {
     if (seat.isBooked) return;
     setSelectedSeats((prev) =>
       prev.find((s) => s.id === seat.id)
-        ? prev.filter((s) => s.id !== seat.id)
-        : [...prev, seat]
+        ? []
+        : [seat]
     );
   };
 
@@ -88,7 +90,7 @@ export default function SeatsPage() {
       <main className="min-h-screen bg-slate-950 flex items-center justify-center">
         <div className="text-center text-slate-400">
           <p className="text-4xl mb-3">✈</p>
-          <p className="text-red-400">{error || "Flight nahi mili"}</p>
+          <p className="text-red-400">{error || "Flight not found"}</p>
           <button
             onClick={() => router.back()}
             className="mt-4 text-blue-400 hover:underline text-sm">
@@ -103,18 +105,12 @@ export default function SeatsPage() {
 
   return (
     <main className="min-h-screen bg-slate-950">
-      <header className="border-b border-slate-800 px-6 py-4">
-        <div className="max-w-2xl mx-auto flex items-center gap-3">
-          <button
-            onClick={() => router.back()}
-            className="text-slate-400 hover:text-white transition-colors">
-            ←
-          </button>
-          <span className="text-xl font-bold text-white">✈ SkyBook</span>
-        </div>
-      </header>
-
       <div className="max-w-2xl mx-auto px-6 py-8">
+        <button
+          onClick={() => router.back()}
+          className="text-slate-400 hover:text-white transition-colors mb-6 flex items-center gap-2 text-sm">
+          ← Back
+        </button>
         {/* Flight Info */}
         <div className="bg-slate-900 border border-slate-700 rounded-2xl p-5 mb-8">
           <div className="flex items-center justify-between mb-3">
@@ -166,10 +162,22 @@ export default function SeatsPage() {
         </div>
 
         {/* Seat Grid */}
-        <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 mb-6">
-          <div className="grid grid-cols-7 gap-2 mb-3 px-1">
+        <div className="relative mx-auto max-w-fit mb-8 mt-12">
+          {/* Fuselage shape */}
+          <div className="absolute -top-12 -bottom-4 -left-6 -right-6 bg-slate-800/30 border-[3px] border-slate-700/50 rounded-t-[120px] rounded-b-[40px] pointer-events-none shadow-xl" />
+          
+          <div className="relative z-10 bg-slate-900/90 backdrop-blur-md border border-slate-700 rounded-2xl p-6 overflow-x-auto shadow-2xl">
+            <div className="grid grid-cols-[30px_1fr_1fr_1fr_24px_1fr_1fr_1fr] min-w-[300px] gap-2 mb-4 px-1 border-b border-slate-800/80 pb-4">
             <div />
-            {["A", "B", "C", "D", "E", "F"].map((col) => (
+            {["A", "B", "C"].map((col) => (
+              <div
+                key={col}
+                className="text-center text-xs text-slate-500 font-medium">
+                {col}
+              </div>
+            ))}
+            <div /> {/* Aisle gap */}
+            {["D", "E", "F"].map((col) => (
               <div
                 key={col}
                 className="text-center text-xs text-slate-500 font-medium">
@@ -178,13 +186,13 @@ export default function SeatsPage() {
             ))}
           </div>
           {Array.from({ length: 5 }, (_, rowIdx) => (
-            <div key={rowIdx} className="grid grid-cols-7 gap-2 mb-2">
-              <div className="flex items-center justify-center text-xs text-slate-600">
+            <div key={rowIdx} className="grid grid-cols-[30px_1fr_1fr_1fr_24px_1fr_1fr_1fr] min-w-[300px] gap-2 mb-2">
+              <div className="flex items-center justify-center text-xs text-slate-600 font-medium">
                 {rowIdx + 1}
               </div>
-              {seats.slice(rowIdx * 6, rowIdx * 6 + 6).map((seat) => {
+              {seats.slice(rowIdx * 6, rowIdx * 6 + 6).map((seat, i) => {
                 const isSelected = selectedSeats.some((s) => s.id === seat.id);
-                return (
+                const button = (
                   <button
                     key={seat.id}
                     onClick={() => handleSeatClick(seat)}
@@ -194,15 +202,23 @@ export default function SeatsPage() {
                       seat.isBooked
                         ? "bg-red-950 border border-red-900 text-red-700 cursor-not-allowed"
                         : isSelected
-                        ? "bg-blue-600 border border-blue-400 text-white scale-105"
+                        ? "bg-blue-600 border border-blue-400 text-white scale-105 shadow-[0_0_10px_rgba(37,99,235,0.5)]"
                         : "bg-slate-800 border border-slate-600 text-slate-300 hover:bg-slate-700 cursor-pointer"
                     }`}>
                     {seat.seatNumber}
                   </button>
                 );
+
+                return (
+                  <Fragment key={seat.id}>
+                    {button}
+                    {i === 2 && <div className="w-full" />}
+                  </Fragment>
+                );
               })}
             </div>
           ))}
+          </div>
         </div>
 
         {/* Book Now */}
@@ -243,5 +259,20 @@ export default function SeatsPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function SeatsPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-slate-950 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3 text-slate-400">
+          <div className="w-8 h-8 border-2 border-slate-600 border-t-blue-400 rounded-full animate-spin" />
+          <p>Loading...</p>
+        </div>
+      </main>
+    }>
+      <SeatsContent />
+    </Suspense>
   );
 }

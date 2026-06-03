@@ -20,10 +20,12 @@ export type SearchParams = {
   origin: string;
   destination: string;
   date: string;
+  returnDate?: string;
 };
 
 export default function SearchPage() {
-  const [flights, setFlights] = useState<Flight[]>([]);
+  const [outboundFlights, setOutboundFlights] = useState<Flight[]>([]);
+  const [returnFlights, setReturnFlights] = useState<Flight[]>([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const [error, setError] = useState("");
@@ -32,16 +34,25 @@ export default function SearchPage() {
     setLoading(true);
     setSearched(true);
     setError("");
-    setFlights([]);
+    setOutboundFlights([]);
+    setReturnFlights([]);
 
     try {
-      const query = new URLSearchParams(params).toString();
-      const res = await fetch(`/api/flights?${query}`);
-      if (!res.ok) throw new Error("Flights fetch karne mein problem hui");
+      const outboundQuery = new URLSearchParams({ origin: params.origin, destination: params.destination, date: params.date }).toString();
+      const res = await fetch(`/api/flights?${outboundQuery}`);
+      if (!res.ok) throw new Error("Failed to fetch flights");
       const data = await res.json();
-      setFlights(data);
+      setOutboundFlights(data);
+
+      if (params.returnDate) {
+        const returnQuery = new URLSearchParams({ origin: params.destination, destination: params.origin, date: params.returnDate }).toString();
+        const returnRes = await fetch(`/api/flights?${returnQuery}`);
+        if (!returnRes.ok) throw new Error("Failed to fetch return flights");
+        const returnData = await returnRes.json();
+        setReturnFlights(returnData);
+      }
     } catch (err) {
-      setError("Flights load nahi ho sake. Dobara try karo.");
+      setError("Unable to load flights. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -49,15 +60,6 @@ export default function SearchPage() {
 
   return (
     <main className="min-h-screen bg-slate-950">
-      <header className="border-b border-slate-800 px-6 py-4">
-        <div className="max-w-4xl mx-auto flex items-center gap-3">
-          <span className="text-2xl font-bold text-white tracking-tight">
-            ✈ SkyBook
-          </span>
-          <span className="text-slate-500 text-sm">Flight Search</span>
-        </div>
-      </header>
-
       <div className="max-w-4xl mx-auto px-6 py-10">
         <div className="mb-10">
           <h1 className="text-3xl font-bold text-white mb-2">
@@ -82,26 +84,45 @@ export default function SearchPage() {
           </div>
         )}
 
-        {!loading && searched && flights.length === 0 && !error && (
+        {!loading && searched && outboundFlights.length === 0 && !error && (
           <div className="text-center py-16 text-slate-500">
             <p className="text-4xl mb-3">🔍</p>
             <p className="text-lg font-medium text-slate-300">
-              No flights available
+              No flights available for outbound journey
             </p>
             <p className="text-sm mt-1">
-             Try again
+             Try a different date or route.
             </p>
           </div>
         )}
 
-        {!loading && flights.length > 0 && (
-          <div>
-            <p className="text-slate-400 text-sm mb-4">
-              <span className="text-white font-medium">{flights.length}</span>{" "}
-              flights found
-            </p>
+        {!loading && outboundFlights.length > 0 && (
+          <div className="mb-10">
+            <h2 className="text-xl font-bold text-white mb-4 border-b border-slate-800 pb-2">
+              Outbound: {outboundFlights[0]?.origin} → {outboundFlights[0]?.destination}
+            </h2>
             <div className="flex flex-col gap-4">
-              {flights.map((flight) => (
+              {outboundFlights.map((flight) => (
+                <FlightCard key={flight.id} flight={flight} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {!loading && searched && returnFlights.length === 0 && outboundFlights.length > 0 && !error && (
+           // Only show "No return flights" if they actually searched for a return flight (which means returnFlights logic ran but returned empty array)
+           // But we don't store `hasReturnDate` strictly, so let's rely on the state being empty.
+           // To be safe, we will just render the Return Flights section only if there are return flights.
+           null
+        )}
+
+        {!loading && returnFlights.length > 0 && (
+          <div>
+            <h2 className="text-xl font-bold text-white mb-4 border-b border-slate-800 pb-2">
+              Return: {returnFlights[0]?.origin} → {returnFlights[0]?.destination}
+            </h2>
+            <div className="flex flex-col gap-4">
+              {returnFlights.map((flight) => (
                 <FlightCard key={flight.id} flight={flight} />
               ))}
             </div>

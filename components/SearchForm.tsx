@@ -25,6 +25,7 @@ export default function SearchForm({ onSearch, loading }: Props) {
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
   const [date, setDate] = useState("");
+  const [returnDate, setReturnDate] = useState("");
 
   const today = new Date().toISOString().split("T")[0];
 
@@ -32,17 +33,17 @@ export default function SearchForm({ onSearch, loading }: Props) {
     e.preventDefault();
     if (!origin || !destination || !date) return;
     if (origin === destination) {
-      alert("Origin aur destination alag hone chahiye!");
+      alert("Origin and destination cannot be the same!");
       return;
     }
-    onSearch({ origin, destination, date });
+    onSearch({ origin, destination, date, ...(returnDate && { returnDate }) });
   };
 
   return (
     <form
       onSubmit={handleSubmit}
       className="bg-slate-900 border border-slate-700 rounded-2xl p-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
         <div>
           <label className="block text-xs text-slate-400 mb-1.5 uppercase tracking-wider">
             From
@@ -102,13 +103,26 @@ export default function SearchForm({ onSearch, loading }: Props) {
             className="w-full bg-slate-800 border border-slate-600 text-white rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
+
+        <div>
+          <label className="block text-xs text-slate-400 mb-1.5 uppercase tracking-wider">
+            Return (Optional)
+          </label>
+          <input
+            type="date"
+            value={returnDate}
+            min={date || today}
+            onChange={(e) => setReturnDate(e.target.value)}
+            className="w-full bg-slate-800 border border-slate-600 text-white rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
       </div>
 
       <button
         type="submit"
         disabled={loading || !origin || !destination || !date}
-        className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-semibold rounded-lg px-6 py-3 transition-colors text-sm">
-        {loading ? "Dhundh raha hai..." : "Flights Dhundho ✈"}
+        className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-semibold rounded-lg px-6 py-3 transition-colors text-sm mt-2">
+        {loading ? "Searching..." : "Search Flights ✈"}
       </button>
     </form>
   );

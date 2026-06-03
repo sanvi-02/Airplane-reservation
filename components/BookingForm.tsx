@@ -55,11 +55,7 @@ export default function BookingForm({
         return;
       }
 
-      router.push(
-        `/confirm?ref=${data.referenceCode}&name=${encodeURIComponent(
-          name
-        )}&flight=${flightNumber}&seat=${seatNumber}&from=${origin}&to=${destination}&price=${price}`
-      );
+      router.push(`/confirm?ref=${data.referenceCode}`);
     } catch {
       setError("Something went wrong. Try again.");
     } finally {
@@ -69,12 +65,6 @@ export default function BookingForm({
 
   return (
     <main className="min-h-screen bg-slate-950">
-      <header className="border-b border-slate-800 px-6 py-4">
-        <div className="max-w-2xl mx-auto flex items-center gap-3">
-          <span className="text-xl font-bold text-white">✈ SkyBook</span>
-        </div>
-      </header>
-
       <div className="max-w-md mx-auto px-6 py-10">
         <h1 className="text-2xl font-bold text-white mb-2">Complete Booking</h1>
         <p className="text-slate-400 text-sm mb-8">
