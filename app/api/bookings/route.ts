@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { createLocalBooking } from "@/lib/local-store";
 import { nanoid } from "nanoid";
-
+import { sendBookingEmail } from "@/lib/email";
 export async function POST(req: NextRequest) {
   const { seatId, passengerName, passengerEmail, paymentId } = await req.json();
 
@@ -48,7 +48,13 @@ export async function POST(req: NextRequest) {
       },
       include: { seat: { include: { flight: true } } },
     });
-
+   await sendBookingEmail(
+     booking.passengerEmail,
+     booking.passengerName,
+     booking.seat.flight.number,
+     booking.seat.number,
+     booking.referenceCode
+   );
     return NextResponse.json(booking, { status: 201 });
   } catch (err) {
     console.error("Booking error:", err);
